@@ -22,44 +22,6 @@ class Solution:
             if weights[w] == 0:
                 w += 1
         return total
-    # def numRescueBoats(self, people, limit):
-    #     """
-    #     :type people: List[int]
-    #     :type limit: int
-    #     :rtype: int
-    #     """
-    #     people.sort(reverse=True)
-    #     assigned = [False] * len(people)
-    #     total = 0
-    #     for i in range(len(people)):
-    #         if assigned[i]:
-    #             continue
-    #         assigned[i] = True
-    #         total += 1
-    #         self.assignRemain(
-    #             limit - people[i], people, assigned, i + 1, len(people) - 1)
-    #     return total
-
-    # def assignRemain(self, remain, people, assigned, begin, end):
-    #     if begin == end:
-    #         if people[begin] > remain:
-    #             return
-    #         j = begin
-    #         while j < len(people) and assigned[j]:
-    #             j += 1
-    #         if j < len(people):
-    #             assigned[j] = True
-    #         return
-    #     if begin > end:
-    #         return
-    #     mid = begin + end >> 1
-    #     if people[mid] > remain:
-    #         self.assignRemain(remain, people, assigned, mid + 1, end)
-    #     elif mid - 1 < begin or people[mid-1] > remain:
-    #         self.assignRemain(remain, people, assigned, mid, mid)
-    #     else:
-    #         self.assignRemain(remain, people, assigned, begin, mid - 1)
-
 
 sol = Solution()
 boats = sol.numRescueBoats([1, 2], 3)   # 1
