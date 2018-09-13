@@ -19,6 +19,6 @@ class Solution:
             highSum = lowSum + k
             if not highSum in sumsMap:
                 continue
-            highIndexes = sumsMap[highSum]
-            longest = max(longest, highIndexes[-1] - lowCounts[0])
+            highCounts = sumsMap[highSum]
+            longest = max(longest, highCounts[-1] - lowCounts[0])
         return longest
