@@ -10,7 +10,7 @@ class Solution:
         ret = []
         total = pow(2, len(word))
         for abbrChars in range(total):
-            abbrWord = ''
+            abbrWordParts = []
             consecutiveAbbr = 0
             for pos in range(len(word)):
                 if abbrChars & (1 << pos):
@@ -19,10 +19,44 @@ class Solution:
                 else:
                     # not to abbr the char word[pos]
                     if consecutiveAbbr > 0:
-                        abbrWord += str(consecutiveAbbr)
+                        abbrWordParts.append(str(consecutiveAbbr))
                         consecutiveAbbr = 0
-                    abbrWord += word[pos]
+                    abbrWordParts.append(word[pos])
             if consecutiveAbbr > 0:
-                abbrWord += str(consecutiveAbbr)
-            ret.append(abbrWord)
+                abbrWordParts.append(str(consecutiveAbbr))
+            ret.append(''.join(abbrWordParts))
         return ret
+
+
+class SolutionByBackTracking:
+    def generateAbbreviations(self, word):
+        """
+        :type word: str
+        :rtype: List[str]
+        """
+        ret = []
+        self.helper(word, 0, [], ret)
+        return ret
+
+    def helper(self, word, idx, prefix, ret):
+        if idx == len(word):
+            ret.append(''.join(map(str, prefix)))
+            return
+        # not to abbreviate this character
+        prefix.append(word[idx])
+        self.helper(word, idx + 1, prefix, ret)
+        prefix.pop()
+        # to abbreviate this character
+        if len(prefix) > 0 and isinstance(prefix[-1], int):
+            prefix[-1] += 1
+            self.helper(word, idx + 1, prefix, ret)
+            prefix[-1] -= 1
+        else:
+            prefix.append(1)
+            self.helper(word, idx + 1, prefix, ret)
+            prefix.pop()
+
+
+sol = Solution()
+ret = sol.generateAbbreviations('word')
+print(ret)
