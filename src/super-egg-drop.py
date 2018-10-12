@@ -1,56 +1,41 @@
-class Solution:
-    def superEggDropDP(self, K, N):
-        """
-        :type K: int
-        :type N: int
-        :rtype: int
-        """
-        dp = [0 for n in range(N + 1)]
-        for n in range(1, N + 1):
-            dp[n] = n
-        for k in range(2, K + 1):
-            dp1 = [0 for n in range(N + 1)]
-            dp1[1] = 1
-            for n in range(2, N + 1):
-                dp1[n] = n
-                for mid in range(2, n):
-                    dp1[n] = min(dp1[n], 1 + max(dp[mid - 1], dp1[n - mid]))
-            dp = dp1
-        return dp[N]
+import math
 
+
+class Solution:
     def superEggDrop(self, K, N):
         """
         :type K: int
         :type N: int
         :rtype: int
         """
-        cache = []
-        for k in range(K+1):
-            cache.append(dict())
-        ret = self.process(K, N, cache)
-        return ret
+        cache = [dict() for k in range(K + 1)]
+        return self.helper(K, N, cache)
 
-    def process(self, k, length, cache):
-        if k <= 0:
-            return 0
-        if k == 1 or length <= 1:
-            return max(length, 0)
-        if length in cache[k]:
-            return cache[k][length]
-        ret = length
-        mid = length + 1 >> 1
-        while mid > 0:
-            low = self.process(k - 1, mid - 1, cache)
-            high = self.process(k, length - mid, cache)
-            if (low == high or mid == 1):
-                ret = min(ret, 1 + max(low, high))
+    def helper(self, k, n, cache):
+        if n in cache[k]:
+            return cache[k][n]
+        if k == 1 or n <= 2:
+            return n
+        upHalfMin = 1
+        upHalfMax = n - 1
+        while upHalfMin <= upHalfMax:
+            upHalf = upHalfMin + upHalfMax >> 1
+            downHalf = n - upHalf - 1
+            upTry = self.helper(k, upHalf, cache)
+            downTry = self.helper(k - 1, downHalf, cache)
+            if upHalfMin == upHalfMax or downTry == upTry:
                 break
-            mid -= 1
-        cache[k][length] = ret
-        return ret
+            if downTry > upTry:
+                upHalfMin = upHalf + 1
+            else:
+                upHalfMax = upHalf - 1
+        cache[k][n] = max(upTry, downTry) + 1
+        return cache[k][n]
 
 
 sol = Solution()
+# ret = sol.superEggDrop(3, 2)
 # ret = sol.superEggDrop(2, 6)
-ret = sol.superEggDrop(4, 10000)
+ret = sol.superEggDrop(3, 200)
+# ret = sol.superEggDrop(4, 10000)
 print(ret)
